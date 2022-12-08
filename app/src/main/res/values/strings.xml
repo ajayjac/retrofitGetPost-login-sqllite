@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Task6_V1</string>
+    <string name="splashText">Hi, User...</string>
+    <string name="submit">submit</string>
+</resources>
