@@ -12,8 +12,17 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.task6_v1.Api.ProductsApi
+import com.example.task6_v1.Api.RetrofitHelper
+import com.example.task6_v1.dataclass.ResponceProduct
 import com.example.task6_v1.ui.SignIn
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,63 +30,68 @@ class MainActivity : AppCompatActivity() {
     lateinit var preferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
-   /* private lateinit var recyclerView: RecyclerView*/
+    private var productList: ArrayList<ResponceProduct> = ArrayList()
+
+    private lateinit var recyclerView: RecyclerView
+//    private  lateinit var productAdapter: ProductAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        init()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://fakestoreapi.com/")
+            .addConverterFactory(
+            GsonConverterFactory.create()).build()
+
+        val productsApi = RetrofitHelper.getInstance().create(ProductsApi::class.java)
+
+        //lauching a new couroutine
+        GlobalScope.launch {
+            val result = productsApi.getProducts()
+            if (result!=null){
+                Log.d("Test","product: success" +result.toString())
+
+               // Log.d("type : ", "${result::class.simpleName}")
+            }
+        }
+
+
+
+
        //floating button id
        val fab: View = findViewById(R.id.fab)
-
-
        //floating button action
        fab.setOnClickListener { view ->
-           /*val i = Intent(this, Form::class.java)
-           startActivity(i)*/
 
-           /* val dialogBuilder = AlertDialog.Builder(this)
-            val inflater = this.layoutInflater
-            val dialogView = inflater.inflate(R.layout.insert_dialog, null)
-            dialogBuilder.setView(dialogView)
-
-
-            val edtName = dialogView.findViewById(R.id.updateName) as EditText
-            val edtPhone = dialogView.findViewById(R.id.updatePhone) as EditText
-            val edtAddress = dialogView.findViewById(R.id.updateAddress) as EditText
-            val edtLocation = dialogView.findViewById(R.id.updateLocation) as EditText
-
-
-            dialogBuilder.setTitle("Insert Record")
-            dialogBuilder.setMessage("Enter data below")
-            dialogBuilder.setPositiveButton("Insert", DialogInterface.OnClickListener { _, _ ->
-
-
-                val updateName = edtName.text.toString()
-                val updatePhone = edtPhone.text.toString()
-                val updateAddress = edtAddress.text.toString()
-                val updateLocation = edtLocation.text.toString()
-                //creating the instance of DatabaseHandler class
-                val databaseHandler: DatabaseHandler = DatabaseHandler(this)
-                if(updatePhone.trim()!="" && updateName.trim()!="" && updateAddress.trim()!="" && updateLocation.trim()!=""){
-                    //calling the updateEmployee method of DatabaseHandler class to update record
-                    val status = databaseHandler.addEmployee(EmpModelClass(updateName, Integer.parseInt(updatePhone), updateAddress, updateLocation ))
-                    if(status > -1){
-                        Log.d(TAG, "Data: Inserted")
-                        Toast.makeText(applicationContext,"record inserted", Toast.LENGTH_LONG).show()
-                    }
-                }else{
-                    Toast.makeText(applicationContext,"data cannot be blank", Toast.LENGTH_LONG).show()
-                }
-
-            })
-            dialogBuilder.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
-                //pass
-            })
-            val b = dialogBuilder.create()
-            b.show()*/
        }
 
     }
+    private fun init(){
+        recyclerView = findViewById(R.id.rv)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+
+        productList = ArrayList()
+
+/*
+        addDataToList()
+*/
+
+        val adapter = ProductAdapter(productList)
+        recyclerView.adapter = adapter
+
+    }
+   /* private fun addDataToList(){
+
+        productList.add(ResponceProduct("", "10"))
+        productList.add(ResponceProduct("", "12"))
+        productList.add(ResponceProduct("", "13"))
+        productList.add(ResponceProduct("", "14"))
+        productList.add(ResponceProduct("", "15"))
+
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
@@ -115,7 +129,6 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, SignIn::class.java))
 
                     finish()
-
 
                 })
                 //negative
