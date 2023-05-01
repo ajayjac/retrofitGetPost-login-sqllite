@@ -59,9 +59,4 @@ class SignUp : AppCompatActivity() {
 
     }
 
-    fun Login(view: View) {
-        val i = Intent(this, SignIn::class.java)
-        startActivity(i)
-    }
-
 }

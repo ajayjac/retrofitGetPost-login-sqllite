@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
+    android:id="@+id/cardview"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,6 +9,8 @@
     android:layout_marginVertical="12dp"
     app:cardCornerRadius="10dp"
     android:elevation="30dp">
+
+
     <LinearLayout
         android:id="@+id/Linear"
         android:layout_width="match_parent"
@@ -17,8 +20,9 @@
 
         <ImageView
             android:id="@+id/imageHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_margin="5dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_exit">
@@ -69,6 +73,7 @@
                 android:textAlignment="center"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <RatingBar
             android:id="@+id/rBar"
             android:layout_width="wrap_content"

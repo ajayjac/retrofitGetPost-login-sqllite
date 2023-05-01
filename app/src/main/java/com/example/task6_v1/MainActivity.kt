@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,12 +18,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.task6_v1.Api.ProductsApi
 import com.example.task6_v1.Api.RetrofitHelper
 import com.example.task6_v1.dataclass.ResponceProduct
+import com.example.task6_v1.ui.Form
 import com.example.task6_v1.ui.SignIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Collections.addAll
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,35 +33,25 @@ class MainActivity : AppCompatActivity() {
     lateinit var preferences: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
 
-    private var productList: ArrayList<ResponceProduct> = ArrayList()
 
-    private lateinit var recyclerView: RecyclerView
-//    private  lateinit var productAdapter: ProductAdapter
+    lateinit var rvproduct: RecyclerView
+    var productList: ArrayList<ResponceProduct> = ArrayList()
+
+    lateinit var productadapter:ProductAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        init()
+        rvproduct = findViewById(R.id.rv)
+        rvproduct.layoutManager = GridLayoutManager(this, 2)
+        getproducts()
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://fakestoreapi.com/")
             .addConverterFactory(
             GsonConverterFactory.create()).build()
-
-        val productsApi = RetrofitHelper.getInstance().create(ProductsApi::class.java)
-
-        //lauching a new couroutine
-        GlobalScope.launch {
-            val result = productsApi.getProducts()
-            if (result!=null){
-                Log.d("Test","product: success" +result.toString())
-
-               // Log.d("type : ", "${result::class.simpleName}")
-            }
-        }
-
-
 
 
        //floating button id
@@ -66,21 +59,56 @@ class MainActivity : AppCompatActivity() {
        //floating button action
        fab.setOnClickListener { view ->
 
+           val i = Intent(this, Form::class.java)
+           startActivity(i)
+
        }
 
     }
-    private fun init(){
-        recyclerView = findViewById(R.id.rv)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
 
-        productList = ArrayList()
+    override fun onResume() {
+        super.onResume()
+        getproducts()
+    }
+
+    private fun getproducts() {
+        val productsApi = RetrofitHelper.getInstance().create(ProductsApi::class.java)
+
+        //lauching a new couroutine
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = productsApi.getProducts()
+            val progress_home = findViewById<ProgressBar>(R.id.progress_home)
+            if (result!=null){
+
+                rvproduct.visibility = View.VISIBLE
+                productList.clear()
+
+                productList?.addAll(result)
+
+                init()
 
 /*
-        addDataToList()
-*/
+                Log.d("Test","productList: success" +productList.toString())
 
-        val adapter = ProductAdapter(productList)
-        recyclerView.adapter = adapter
+                Log.d("Test","result : success" +result.toString())*/
+
+
+            }
+            else{
+                Toast.makeText(this@MainActivity, "Something Went Wrong", Toast.LENGTH_SHORT).show()
+            }
+            progress_home.visibility = View.GONE
+        }
+
+    }
+
+    private fun init(){
+
+
+        Log.d("Size", "init: "+productList.size)
+
+        productadapter = ProductAdapter(this,productList)
+        rvproduct.adapter = productadapter
 
     }
    /* private fun addDataToList(){

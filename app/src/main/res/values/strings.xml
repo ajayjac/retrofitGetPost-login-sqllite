@@ -2,4 +2,21 @@
     <string name="app_name">Task6_V1</string>
     <string name="splashText">Hi, User...</string>
     <string name="submit">submit</string>
+
+
+    <string name="mens">mens clothing</string>
+    <string name="jew">jewelery</string>
+    <string name="ele">electronics</string>
+    <string name="wom">womens clothing</string>
+
+    <string-array name="Category">
+        <item>@string/mens</item>
+        <item>@string/jew</item>
+        <item>@string/ele</item>
+        <item>@string/wom</item>
+    </string-array>
+
+    <string name="selected_item">Selected item:</string>
+    <string name="discription">Discription Details</string>
+    <string name="category">category</string>
 </resources>

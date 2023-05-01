@@ -22,10 +22,10 @@ data class ResponceProduct(
 	val category: String? = null,
 
 	@field:SerializedName("description")
-	val description: String? = null,
+	var description: String? = null,
 
 	@field:SerializedName("id")
-	val id: Int? = null,
+	var id: Int? = null,
 
 	@field:SerializedName("image")
 	val image: String? = null,
@@ -37,7 +37,7 @@ data class ResponceProduct(
 	val rating: Rating? = null,
 
 	@field:SerializedName("title")
-	val title: String? = null
+	var title: String? = null
 
 
 )
@@ -52,14 +52,17 @@ data class Rating(
 	val count: Int? = null
 )
 
+/*
 data class ResponseItem(
-	/*val image: String? = null,
+	*/
+/*val image: String? = null,
 	val price: Any? = null,
 	val rating: Rating? = null,
 	val description: String? = null,
 	val id: Int? = null,
 	val title: String? = null,
-	val category: String? = null*/
+	val category: String? = null*//*
+
 
 	@field:SerializedName("image")
 	val image: String? = null,
@@ -82,4 +85,5 @@ data class ResponseItem(
 	@field:SerializedName("category")
 	val category: String? = null
 )
+*/
 
